@@ -3,8 +3,6 @@ version: "3.5"
 x-environment:
   &default-back-environment
   # Database settings
-  env_file:
-    - stack.env
 
 x-volumes:
   &default-back-volumes
@@ -15,6 +13,8 @@ x-volumes:
 services:
   taiga-db:
     image: postgres:12.3
+    env_file:
+      - stack.env
     environment:
       POSTGRES_DB: "taiga"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -31,6 +31,8 @@ services:
       - taiga
 
   taiga-back:
+    env_file:
+      - stack.env
     image: taigaio/taiga-back:latest
     environment: *default-back-environment
     volumes: *default-back-volumes
@@ -60,6 +62,8 @@ services:
         condition: service_healthy
 
   taiga-async-rabbitmq:
+    env_file:
+      - stack.env
     image: rabbitmq:3.8-management-alpine
     environment:
       RABBITMQ_ERLANG_COOKIE: "${RABBITMQ_ERLANG_COOKIE}"
@@ -90,6 +94,8 @@ services:
     #   - ./conf.json:/usr/share/nginx/html/conf.json
 
   taiga-events:
+    env_file:
+      - stack.env
     image: taigaio/taiga-events:latest
     environment:
       RABBITMQ_USER: "${RABBITMQ_USER}"
@@ -102,6 +108,8 @@ services:
         condition: service_healthy
 
   taiga-events-rabbitmq:
+    env_file:
+      - stack.env
     image: rabbitmq:3.8-management-alpine
     environment:
       RABBITMQ_ERLANG_COOKIE: "${RABBITMQ_ERLANG_COOKIE}"
@@ -121,6 +129,8 @@ services:
       - taiga
 
   taiga-protected:
+    env_file:
+      - stack.env
     image: taigaio/taiga-protected:latest
     environment:
       MAX_AGE: "${ATTACHMENTS_MAX_AGE}"
@@ -129,6 +139,8 @@ services:
       - taiga
 
   taiga-gateway:
+    env_file:
+      - stack.env
     image: nginx:1.19-alpine
     ports:
       - "9000:80"
